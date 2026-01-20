@@ -53,31 +53,31 @@ export function PropertyFilters({
   const hasActiveFilters = Object.keys(filters).length > 0
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="shadow-sm sticky top-24">
+      <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle>Search Filters</CardTitle>
+          <CardTitle className="text-base sm:text-lg">Search Filters</CardTitle>
           {hasActiveFilters && (
             <Button
               variant="ghost"
               size="sm"
               onClick={clearAllFilters}
-              className="text-xs"
+              className="text-xs h-8 px-2"
             >
               Clear All
             </Button>
           )}
         </div>
         {totalResults !== undefined && (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
             {totalResults} properties found
           </p>
         )}
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-5">
         {/* Price Range */}
         <div className="space-y-2">
-          <Label>Price Range</Label>
+          <Label className="text-sm font-medium">Price Range</Label>
           <div className="flex gap-2">
             <Input
               type="number"
@@ -86,6 +86,7 @@ export function PropertyFilters({
               onChange={(e) =>
                 updateFilter("minPrice", e.target.value ? Number(e.target.value) : undefined)
               }
+              className="text-sm"
             />
             <Input
               type="number"
@@ -94,24 +95,25 @@ export function PropertyFilters({
               onChange={(e) =>
                 updateFilter("maxPrice", e.target.value ? Number(e.target.value) : undefined)
               }
+              className="text-sm"
             />
           </div>
         </div>
 
         {/* Bedrooms */}
         <div className="space-y-2">
-          <Label>Bedrooms</Label>
+          <Label className="text-sm font-medium">Bedrooms</Label>
           <Select
-            value={localFilters.bedrooms?.toString() || ""}
+            value={localFilters.bedrooms?.toString() || "all"}
             onValueChange={(value) =>
-              updateFilter("bedrooms", value ? Number(value) : undefined)
+              updateFilter("bedrooms", value === "all" ? undefined : Number(value))
             }
           >
-            <SelectTrigger>
+            <SelectTrigger className="text-sm">
               <SelectValue placeholder="Any" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Any</SelectItem>
+              <SelectItem value="all">Any</SelectItem>
               <SelectItem value="1">1+</SelectItem>
               <SelectItem value="2">2+</SelectItem>
               <SelectItem value="3">3+</SelectItem>
@@ -123,18 +125,18 @@ export function PropertyFilters({
 
         {/* Bathrooms */}
         <div className="space-y-2">
-          <Label>Bathrooms</Label>
+          <Label className="text-sm font-medium">Bathrooms</Label>
           <Select
-            value={localFilters.bathrooms?.toString() || ""}
+            value={localFilters.bathrooms?.toString() || "all"}
             onValueChange={(value) =>
-              updateFilter("bathrooms", value ? Number(value) : undefined)
+              updateFilter("bathrooms", value === "all" ? undefined : Number(value))
             }
           >
-            <SelectTrigger>
+            <SelectTrigger className="text-sm">
               <SelectValue placeholder="Any" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Any</SelectItem>
+              <SelectItem value="all">Any</SelectItem>
               <SelectItem value="1">1+</SelectItem>
               <SelectItem value="2">2+</SelectItem>
               <SelectItem value="3">3+</SelectItem>
@@ -146,18 +148,18 @@ export function PropertyFilters({
 
         {/* Property Type */}
         <div className="space-y-2">
-          <Label>Property Type</Label>
+          <Label className="text-sm font-medium">Property Type</Label>
           <Select
-            value={localFilters.propertyType || ""}
+            value={localFilters.propertyType || "all"}
             onValueChange={(value) =>
-              updateFilter("propertyType", value || undefined)
+              updateFilter("propertyType", value === "all" ? undefined : value)
             }
           >
-            <SelectTrigger>
+            <SelectTrigger className="text-sm">
               <SelectValue placeholder="Any" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Any</SelectItem>
+              <SelectItem value="all">Any</SelectItem>
               <SelectItem value="House">House</SelectItem>
               <SelectItem value="Condo">Condo</SelectItem>
               <SelectItem value="Townhouse">Townhouse</SelectItem>
@@ -169,38 +171,40 @@ export function PropertyFilters({
 
         {/* City */}
         <div className="space-y-2">
-          <Label>City</Label>
+          <Label className="text-sm font-medium">City</Label>
           <Input
             placeholder="Enter city"
             value={localFilters.city || ""}
             onChange={(e) => updateFilter("city", e.target.value || undefined)}
+            className="text-sm"
           />
         </div>
 
         {/* State */}
         <div className="space-y-2">
-          <Label>State</Label>
+          <Label className="text-sm font-medium">State</Label>
           <Input
             placeholder="Enter state"
             value={localFilters.state || ""}
             onChange={(e) => updateFilter("state", e.target.value || undefined)}
+            className="text-sm"
           />
         </div>
 
         {/* Sort By */}
         <div className="space-y-2">
-          <Label>Sort By</Label>
+          <Label className="text-sm font-medium">Sort By</Label>
           <Select
-            value={localFilters.sortBy || ""}
+            value={localFilters.sortBy || "default"}
             onValueChange={(value) =>
-              updateFilter("sortBy", (value as any) || undefined)
+              updateFilter("sortBy", value === "default" ? undefined : (value as any))
             }
           >
-            <SelectTrigger>
+            <SelectTrigger className="text-sm">
               <SelectValue placeholder="Default" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Default</SelectItem>
+              <SelectItem value="default">Default</SelectItem>
               <SelectItem value="price_asc">Price: Low to High</SelectItem>
               <SelectItem value="price_desc">Price: High to Low</SelectItem>
               <SelectItem value="date_desc">Newest First</SelectItem>
@@ -209,7 +213,7 @@ export function PropertyFilters({
           </Select>
         </div>
 
-        <Button onClick={onSearch} className="w-full">
+        <Button onClick={onSearch} className="w-full mt-6 shadow-sm">
           Apply Filters
         </Button>
       </CardContent>

@@ -93,6 +93,26 @@ The site integrates with the Repliers API for property data. The API client is l
 
 Update your `.env.local` file with your Repliers API credentials. The API key is kept secure on the server side and never exposed to the client.
 
+### Sample Data Fallback
+
+When the Repliers API is unavailable (e.g., no API key configured or API errors), the site automatically falls back to sample property data. This allows you to:
+
+- **Develop and test** without API credentials
+- **Demo the site** with realistic property listings
+- **Continue working** even if the API is temporarily unavailable
+
+The sample data includes 6 properties with full details, images, and descriptions. Sample data is located in `lib/sampleData.ts`.
+
+#### Using Sample Data API
+
+You can also access sample data directly via the API endpoint:
+
+- **Get all listings**: `/api/sample-data?action=listings`
+- **Get filtered listings**: `/api/sample-data?action=listings&city=San Francisco&minPrice=500000`
+- **Get single listing**: `/api/sample-data?action=listing&id=sample-1`
+
+Available sample property IDs: `sample-1` through `sample-6`
+
 ## Features Overview
 
 ### Homepage
@@ -142,9 +162,11 @@ Make sure to set all environment variables in your deployment platform.
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `NEXT_PUBLIC_REPLIERS_API_URL` | Repliers API base URL | Yes |
-| `REPLIERS_API_KEY` | Repliers API key | Yes |
+| `NEXT_PUBLIC_REPLIERS_API_URL` | Repliers API base URL (default: https://api.repliers.io) | No |
+| `REPLIERS_API_KEY` | Repliers API key (required for production) | Yes (production) |
 | `NEXT_PUBLIC_SITE_URL` | Your site URL | Yes |
+
+**Note:** The Repliers API uses the `auth-api-key` header for authentication. Make sure your API key is valid and has the necessary permissions for the MLS data you're accessing.
 
 ## Development
 
