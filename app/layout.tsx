@@ -18,6 +18,12 @@ export const metadata: Metadata = {
   title: "IDX Pro - Real Estate Listings",
   description: "Find your dream home or sell your property with IDX Pro. Browse thousands of real estate listings with advanced search and filtering.",
   keywords: "real estate, property listings, homes for sale, real estate search",
+  icons: {
+    icon: [
+      { url: '/favicon.png', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+  },
 };
 
 export default function RootLayout({
