@@ -3,7 +3,7 @@
  * 
  * COLOR PALETTE:
  * - Navy: #0B1F44 (primary text, authority)
- * - Dark Orange: #C85A1A (premium accent, CTAs)
+ * - Seafoam: #2DD4BF (premium accent, CTAs)
  * - Sandstone: #E8DFC9 (warmth, subtle backgrounds)
  * - Off-White: #F1F5F9 (base)
  * - Soft Gray: #64748B (body text)
@@ -27,21 +27,19 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { getListings, normalizeImageUrl } from "@/lib/repliers"
+import { getListings } from "@/lib/repliers"
 import { agents } from "@/lib/brokerage-data"
 import { ArrowRight, Phone, Mail, MapPin, TrendingUp, Award } from "lucide-react"
 
 export default async function PremiumHomePage() {
-  // Fetch featured listings with proper fallback
+  // Fetch featured listings
   let featuredListings;
-  
   try {
     featuredListings = await getListings({ limit: 6, status: "active" });
-    if (!featuredListings?.properties || !Array.isArray(featuredListings.properties)) {
+    if (!featuredListings || !featuredListings.properties) {
       featuredListings = { properties: [], total: 0, page: 1, limit: 6, totalPages: 0 };
     }
   } catch (error) {
-    console.error('Error fetching featured listings:', error);
     featuredListings = { properties: [], total: 0, page: 1, limit: 6, totalPages: 0 };
   }
 
@@ -51,9 +49,9 @@ export default async function PremiumHomePage() {
     <div className="flex flex-col bg-off-white">
       
       {/* 1) HERO - Asymmetrical 60/40 with overlapping CTA card */}
-      <section className="relative min-h-[78vh] bg-white overflow-visible pb-0">
-        <div className="container relative h-full py-4 lg:py-5 z-10">
-          <div className="grid lg:grid-cols-12 gap-12 items-center min-h-[65vh]">
+      <section className="relative min-h-[90vh] bg-white overflow-hidden">
+        <div className="container relative h-full py-16 lg:py-20">
+          <div className="grid lg:grid-cols-12 gap-12 items-center min-h-[75vh]">
             
             {/* Left: Editorial Content - 60% */}
             <div className="lg:col-span-7 space-y-8 lg:pr-12">
@@ -76,7 +74,7 @@ export default async function PremiumHomePage() {
                 <Link href="/listings">
                   <Button 
                     size="lg" 
-                    className="text-base px-8 h-14 bg-seafoam hover:bg-seafoam/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 group hover:scale-105 hover:-translate-y-1"
+                    className="text-base px-8 h-14 bg-seafoam hover:bg-seafoam/90 text-white shadow-lg hover:shadow-xl transition-all group"
                   >
                     Browse Active Listings
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -87,7 +85,7 @@ export default async function PremiumHomePage() {
                   <Button 
                     size="lg" 
                     variant="outline" 
-                    className="text-base px-8 h-14 border-2 border-navy text-navy hover:bg-navy hover:text-white transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-lg"
+                    className="text-base px-8 h-14 border-2 border-navy text-navy hover:bg-navy hover:text-white transition-all"
                   >
                     Schedule Consultation
                   </Button>
@@ -118,13 +116,13 @@ export default async function PremiumHomePage() {
                   src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&h=1000&fit=crop"
                   alt="Luxury coastal home"
                   fill
-                  className="object-cover object-center"
+                  className="object-cover"
                   priority
                   sizes="(max-width: 1024px) 100vw, 40vw"
                 />
                 
-                {/* Price card - bottom left with padding */}
-                <div className="absolute bottom-3 left-3 bg-white p-4 rounded-lg shadow-xl border border-sandstone max-w-xs">
+                {/* Overlapping price card - creates asymmetry */}
+                <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-lg shadow-xl border border-sandstone max-w-xs">
                   <div className="text-sm text-soft-gray mb-1">Just Listed</div>
                   <div className="text-2xl font-bold text-navy">$8,950,000</div>
                   <div className="text-sm text-soft-gray mt-2">3280 Ocean Blvd, Corona del Mar</div>
@@ -134,99 +132,32 @@ export default async function PremiumHomePage() {
             </div>
           </div>
         </div>
-        
-        {/* Elegant divider - positioned at bottom of hero */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
-          <div className="relative w-full">
-            {/* Decorative wave divider */}
-            <svg 
-              className="w-full h-6 md:h-8 lg:h-10 block" 
-              viewBox="0 0 1440 160" 
-              preserveAspectRatio="none" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path 
-                d="M0 160L48 150C96 140 192 120 288 110C384 100 480 100 576 105C672 110 768 120 864 125C960 130 1056 130 1152 125C1248 120 1344 110 1392 105L1440 100V160H1392C1344 160 1248 160 1152 160C1056 160 960 160 864 160C768 160 672 160 576 160C480 160 384 160 288 160C192 160 96 160 48 160H0V160Z" 
-                fill="white"
-              />
-            </svg>
-            {/* Subtle decorative line */}
-            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-seafoam/20 to-transparent"></div>
-          </div>
-        </div>
       </section>
 
       {/* 2) FEATURED LISTINGS - Asymmetric masonry-style grid */}
-      <section className="pt-16 md:pt-20 lg:pt-24 pb-24 lg:pb-32 relative overflow-hidden">
-        {/* Background image with overlay */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1920&h=1080&fit=crop"
-            alt="Laguna Beach"
-            fill
-            className="object-cover"
-            sizes="100vw"
-          />
-          {/* Dark gray overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-900/85 via-gray-900/80 to-gray-900/85" />
-        </div>
-        
-        <div className="container relative z-10">
+      <section className="py-24 lg:py-32 bg-gradient-to-b from-white to-off-white">
+        <div className="container">
           
-          {/* Section intro - Editorial magazine-style layout */}
-          <div className="mb-20 lg:mb-24">
-            {/* Small label badge with extended lines */}
-            <div className="flex items-center gap-4 mb-6">
-              <div className="h-[3px] flex-1" style={{ backgroundColor: '#C85A1A' }}></div>
-              <span className="text-base font-bold tracking-[0.15em] uppercase whitespace-nowrap" style={{ color: '#C85A1A' }}>
-                Active Inventory
-              </span>
-              <div className="h-[3px] flex-1" style={{ backgroundColor: '#C85A1A' }}></div>
-            </div>
-            
-            {/* Main heading with editorial break */}
-            <div className="max-w-4xl mb-8">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight mb-6">
-                Current listings across
-                <span className="block mt-2 text-dark-orange">Orange County's coastal communities</span>
+          {/* Section intro - offset layout */}
+          <div className="grid lg:grid-cols-12 gap-8 mb-16">
+            <div className="lg:col-span-7">
+              <h2 className="text-4xl md:text-5xl font-bold text-navy mb-4 leading-tight">
+                Current listings across Orange County's coastal communities
               </h2>
             </div>
-            
-            {/* Editorial description with price range emphasis */}
-            <div className="grid md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl">
-              <div className="space-y-4">
-                <p className="text-lg md:text-xl text-white/80 leading-relaxed">
-                  Each property is personally curated by our team. We represent homes from 
-                  <span className="font-semibold text-white"> $2M to $25M+</span> in Newport Beach, 
-                  Laguna Beach, Dana Point, and Corona del Mar.
-                </p>
-              </div>
-              <div className="flex items-start gap-4 pt-2">
-                <div className="flex-shrink-0 w-1 h-20 bg-gradient-to-b from-dark-orange to-transparent"></div>
-                <div className="text-base md:text-lg text-white/80 leading-relaxed italic">
-                  "We don't just list properties. We match exceptional homes with discerning buyers 
-                  who value quality, location, and architectural integrity."
-                </div>
-              </div>
+            <div className="lg:col-span-5 flex items-end">
+              <p className="text-lg text-soft-gray">
+                Each property is personally curated by our team. We represent homes from 
+                $2M to $25M+ in Newport Beach, Laguna Beach, Dana Point, and Corona del Mar.
+              </p>
             </div>
           </div>
 
           {/* Staggered grid - not uniform cards */}
-          {featuredListings?.properties && featuredListings.properties.length > 0 ? (
+          {featuredListings.properties.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
               {featuredListings.properties.slice(0, 6).map((property, idx) => {
-                // Ensure imageUrl is always a string and properly normalized
-                const rawImage = property.images?.[0];
-                let imageUrl = "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&h=600&fit=crop";
-                
-                if (rawImage) {
-                  if (typeof rawImage === 'string') {
-                    imageUrl = normalizeImageUrl(rawImage);
-                  } else if ((rawImage as any)?.url) {
-                    imageUrl = normalizeImageUrl((rawImage as any).url);
-                  }
-                }
+                const imageUrl = property.images?.[0] || "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&h=600&fit=crop";
                 
                 // Vary heights for asymmetry
                 const heightClass = idx % 3 === 0 ? "aspect-[4/5]" : "aspect-[4/4]";
@@ -252,8 +183,8 @@ export default async function PremiumHomePage() {
                         
                         {/* Hover details */}
                         <div className="absolute bottom-0 left-0 right-0 p-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">
-                          <div className="text-2xl font-bold mb-2">{property.address.city}</div>
-                          <div className="text-3xl font-bold opacity-90">
+                          <div className="text-sm mb-2">{property.address.city}</div>
+                          <div className="text-xs opacity-80">
                             {property.bedrooms} bed • {property.bathrooms} bath • {property.squareFeet.toLocaleString()} sqft
                           </div>
                         </div>
@@ -277,7 +208,7 @@ export default async function PremiumHomePage() {
               })}
             </div>
           ) : (
-            <div className="text-center py-12 text-white/70">
+            <div className="text-center py-12 text-soft-gray">
               <p>New listings coming soon. Contact us for off-market opportunities.</p>
             </div>
           )}
@@ -285,8 +216,9 @@ export default async function PremiumHomePage() {
           <div className="text-center mt-12">
             <Link href="/listings">
               <Button 
+                variant="outline" 
                 size="lg"
-                className="px-8 h-14 bg-amber-100 hover:bg-amber-200 text-black border-0 font-bold text-lg transition-all duration-300 group hover:scale-105 hover:shadow-lg"
+                className="px-8 h-14 border-2 border-navy text-navy hover:bg-navy hover:text-white transition-all group"
               >
                 View All {featuredListings.total} Active Listings
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -300,14 +232,8 @@ export default async function PremiumHomePage() {
       <section className="py-24 lg:py-32 bg-white">
         <div className="container">
           <div className="mb-16">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="h-[3px] flex-1 bg-seafoam"></div>
-              <span className="text-base font-bold tracking-[0.15em] uppercase whitespace-nowrap text-seafoam">
-                Areas We Serve
-              </span>
-              <div className="h-[3px] flex-1 bg-seafoam"></div>
-            </div>
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-navy max-w-4xl leading-[1.1] tracking-tight">
+            <div className="text-sm text-seafoam font-semibold tracking-wide mb-4">AREAS WE SERVE</div>
+            <h2 className="text-4xl md:text-5xl font-bold text-navy max-w-3xl leading-tight">
               Deep expertise in Orange County's premier coastal neighborhoods
             </h2>
           </div>
@@ -325,17 +251,14 @@ export default async function PremiumHomePage() {
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
-                {/* Strong gradient overlay for maximum text readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/80 via-navy/50 to-transparent" />
-                {/* Additional dark overlay at bottom for text area */}
-                <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-navy/95 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-8 text-white z-10">
-                  <h3 className="text-3xl font-bold mb-2 drop-shadow-lg">Newport Beach</h3>
-                  <p className="text-sm opacity-100 max-w-md leading-relaxed drop-shadow-md">
+                <div className="absolute inset-0 bg-gradient-to-t from-navy/70 to-transparent" />
+                <div className="absolute bottom-0 left-0 p-8 text-white">
+                  <h3 className="text-3xl font-bold mb-2">Newport Beach</h3>
+                  <p className="text-sm opacity-90 max-w-md">
                     From the Harbor to Balboa Peninsula, we've closed 180+ transactions here. 
                     Median sale: $4.2M. Inventory moves fast—average DOM is 32 days.
                   </p>
-                  <div className="mt-4 text-xs opacity-95 drop-shadow-sm">Last 12 months: 64 sales</div>
+                  <div className="mt-4 text-xs opacity-75">Last 12 months: 64 sales</div>
                 </div>
               </div>
             </div>
@@ -352,13 +275,10 @@ export default async function PremiumHomePage() {
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
-                  {/* Strong gradient overlay for maximum text readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/80 via-navy/50 to-transparent" />
-                  {/* Additional dark overlay at bottom for text area */}
-                  <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-navy/95 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white z-10">
-                    <h3 className="text-2xl font-bold mb-2 drop-shadow-lg">Laguna Beach</h3>
-                    <p className="text-sm opacity-100 leading-relaxed drop-shadow-md">
+                  <div className="absolute inset-0 bg-gradient-to-t from-navy/70 to-transparent" />
+                  <div className="absolute bottom-0 left-0 p-6 text-white">
+                    <h3 className="text-2xl font-bold mb-2">Laguna Beach</h3>
+                    <p className="text-sm opacity-90">
                       Cliffside estates and artist-colony charm. We handle 15–20 sales annually, 
                       from village bungalows to oceanfront compounds.
                     </p>
@@ -375,13 +295,10 @@ export default async function PremiumHomePage() {
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
-                  {/* Strong gradient overlay for maximum text readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/80 via-navy/50 to-transparent" />
-                  {/* Additional dark overlay at bottom for text area */}
-                  <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-navy/95 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white z-10">
-                    <h3 className="text-2xl font-bold mb-2 drop-shadow-lg">Corona del Mar</h3>
-                    <p className="text-sm opacity-100 leading-relaxed drop-shadow-md">
+                  <div className="absolute inset-0 bg-gradient-to-t from-navy/70 to-transparent" />
+                  <div className="absolute bottom-0 left-0 p-6 text-white">
+                    <h3 className="text-2xl font-bold mb-2">Corona del Mar</h3>
+                    <p className="text-sm opacity-90">
                       Prime beachside location with top-rated schools. Our team has sold 45 homes 
                       here in the past 24 months, including 3 record-breaking sales.
                     </p>
@@ -671,7 +588,7 @@ export default async function PremiumHomePage() {
 
       {/* 7) CONTACT - High-converting, specific CTA */}
       <section className="py-24 lg:py-32 bg-navy text-white">
-        <div className="container max-w-4xl mx-auto">
+        <div className="container max-w-4xl">
           
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
@@ -683,7 +600,7 @@ export default async function PremiumHomePage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 mx-auto max-w-3xl">
+          <div className="grid md:grid-cols-2 gap-8">
             
             {/* Contact info card */}
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-8">
