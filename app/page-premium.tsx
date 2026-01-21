@@ -27,7 +27,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { getListings } from "@/lib/repliers"
+import { getListings, normalizeImageUrl } from "@/lib/repliers"
 import { agents } from "@/lib/brokerage-data"
 import { ArrowRight, Phone, Mail, MapPin, TrendingUp, Award } from "lucide-react"
 
@@ -157,7 +157,17 @@ export default async function PremiumHomePage() {
           {featuredListings.properties.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
               {featuredListings.properties.slice(0, 6).map((property, idx) => {
-                const imageUrl = property.images?.[0] || "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&h=600&fit=crop";
+                // Ensure imageUrl is always a string and properly normalized
+                const rawImage = property.images?.[0];
+                let imageUrl = "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&h=600&fit=crop";
+                
+                if (rawImage) {
+                  if (typeof rawImage === 'string') {
+                    imageUrl = normalizeImageUrl(rawImage);
+                  } else if ((rawImage as any)?.url) {
+                    imageUrl = normalizeImageUrl((rawImage as any).url);
+                  }
+                }
                 
                 // Vary heights for asymmetry
                 const heightClass = idx % 3 === 0 ? "aspect-[4/5]" : "aspect-[4/4]";
