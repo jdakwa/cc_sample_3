@@ -3,9 +3,10 @@
 import Link from "next/link"
 import { useState } from "react"
 import { usePathname } from "next/navigation"
-import { Menu, X, Search } from "lucide-react"
+import { Menu, X, Phone, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { brokerageInfo } from "@/lib/brokerage-data"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -90,13 +91,23 @@ export function Header() {
           </Link>
         </nav>
 
-        <div className="flex items-center space-x-2 sm:space-x-4">
-          <Link href="/listings" className="hidden md:block">
-            <Button variant="outline" size="sm" className="font-medium shadow-sm hover:shadow transition-all">
-              <Search className="mr-2 h-4 w-4" />
-              Search
-            </Button>
-          </Link>
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="hidden md:flex items-center gap-2">
+            <a 
+              href={`tel:${brokerageInfo.contact.phone.replace(/\D/g, '')}`}
+              className="flex items-center justify-center w-9 h-9 rounded-full border border-slate-200 hover:border-primary hover:bg-primary/5 transition-all group"
+              aria-label="Call us"
+            >
+              <Phone className="h-4 w-4 text-slate-600 group-hover:text-primary transition-colors" />
+            </a>
+            <a 
+              href={`mailto:${brokerageInfo.contact.email}`}
+              className="flex items-center justify-center w-9 h-9 rounded-full border border-slate-200 hover:border-primary hover:bg-primary/5 transition-all group"
+              aria-label="Email us"
+            >
+              <Mail className="h-4 w-4 text-slate-600 group-hover:text-primary transition-colors" />
+            </a>
+          </div>
           <Button
             variant="ghost"
             size="icon"
@@ -189,13 +200,23 @@ export function Header() {
             >
               Contact
             </Link>
-            <div className="pt-2 px-4 md:hidden">
-              <Link href="/listings" className="block">
-                <Button className="w-full" onClick={() => setMobileMenuOpen(false)}>
-                  <Search className="mr-2 h-4 w-4" />
-                  Search Properties
-                </Button>
-              </Link>
+            <div className="pt-4 px-4 border-t border-slate-200 md:hidden">
+              <div className="space-y-2">
+                <a 
+                  href={`tel:${brokerageInfo.contact.phone.replace(/\D/g, '')}`}
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
+                >
+                  <Phone className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium">{brokerageInfo.contact.phone}</span>
+                </a>
+                <a 
+                  href={`mailto:${brokerageInfo.contact.email}`}
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
+                >
+                  <Mail className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium">{brokerageInfo.contact.email}</span>
+                </a>
+              </div>
             </div>
           </nav>
         </div>
